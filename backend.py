@@ -1,24 +1,32 @@
-"""Interface between the Streamlit frontend and the RAG pipeline.
+"""Interface between the Streamlit frontend and the RAG pipeline."""
 
-answer() and build_index() are placeholders until the pipeline is implemented.
-"""
-
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 
 import ollama
 
+from rag import generate, index, retrieve
+
 PDF_DIR = Path(__file__).resolve().parent / "pdf_files"
-MODEL = "qwen2.5:14b"
+MODEL = generate.MODEL
 TOP_K = 5
 
 
 @dataclass
 class Source:
+    number: int          # the [n] used in the answer text
     document: str
     page: int
     text: str
     score: float
+
+
+@dataclass
+class Answer:
+    text: str
+    sources: list[Source] = field(default_factory=list)
+    warnings: list[str] = field(default_factory=list)
+    found: bool = True
 
 
 def list_documents() -> list[str]:
@@ -32,11 +40,47 @@ def model_available() -> bool:
         return False
 
 
+def save_upload(name: str, data: bytes) -> bool:
+    """Save an uploaded PDF to the collection; returns False if it is not a PDF."""
+    if not data.startswith(b"%PDF"):
+        return False
+    PDF_DIR.mkdir(exist_ok=True)
+    (PDF_DIR / Path(name).name).write_bytes(data)
+    return True
+
+
+def index_is_current() -> bool:
+    return index.is_current(PDF_DIR)
+
+
 def build_index() -> int:
-    """Index all PDFs; returns the number of chunks. TODO: implement."""
-    raise NotImplementedError("Indeksowanie nie jest jeszcze zaimplementowane.")
+    """Index all PDFs; returns the number of chunks."""
+    return index.build(PDF_DIR)
 
 
-def answer(question: str, top_k: int = TOP_K) -> tuple[str, list[Source]]:
-    """Answer a question with cited sources. TODO: implement."""
-    raise NotImplementedError("Pipeline RAG nie jest jeszcze zaimplementowany.")
+def answer(question: str, top_k: int = TOP_K) -> Answer:
+    if not index_is_current():
+        build_index()
+
+    hits = retrieve.retrieve(question, top_k)
+    if not hits:                                   # nothing relevant: refuse without calling the LLM
+        return Answer(generate.NOT_FOUND, found=False)
+
+    text = generate.generate(question, hits)
+    if generate.NOT_FOUND.rstrip(".") in text:
+        return Answer(generate.NOT_FOUND, found=False)
+
+    valid, invalid = generate.cited_numbers(text, len(hits))
+    warnings = []
+    if invalid:
+        warnings.append(f"Odpowiedź powołuje się na nieistniejące źródła: {invalid}.")
+    if not valid:
+        warnings.append("Odpowiedź nie zawiera cytatów — traktuj ją ostrożnie.")
+    unsupported = generate.verify(text, hits)
+    if unsupported:
+        warnings.append("Weryfikacja wykazała twierdzenia bez pokrycia w źródłach: "
+                        + "; ".join(unsupported))
+
+    sources = [Source(n, hits[n - 1].chunk.document, hits[n - 1].chunk.page,
+                      hits[n - 1].chunk.text, hits[n - 1].score) for n in valid]
+    return Answer(text, sources, warnings)
