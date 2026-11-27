@@ -1,0 +1,203 @@
+[
+  {
+    "id": "Q01",
+    "question": "What is Belady's anomaly? Give the example used in the lecture.",
+    "language": "en",
+    "type": "factual",
+    "answerable": true,
+    "expected_answer": "Adding frames can increase the number of page faults under FIFO (shown by Bélády, Nelson and Shedler, 1969). For the reference string 1, 2, 3, 4, 1, 2, 5, 1, 2, 3, 4, 5, FIFO gives 9 page faults with 3 frames but 10 with 4 frames. Stack algorithms (LRU, OPT) never exhibit it.",
+    "key_facts": ["FIFO", "9 faults with 3 frames", "10 faults with 4 frames", "stack algorithms do not suffer from it"],
+    "sources": [{"document": "EN_OS_L07_virtual-memory.pdf", "pages": [6]}]
+  },
+  {
+    "id": "Q02",
+    "question": "Ile wynosi efektywny czas dostępu do pamięci, gdy czas dostępu to 200 ns, obsługa błędu strony trwa 8 ms, a błąd strony powoduje co tysięczny dostęp?",
+    "language": "pl",
+    "type": "numeric, cross_lingual",
+    "answerable": true,
+    "expected_answer": "EAT = 200 + 7 999 800 · p ns; dla p = 0,001 EAT ≈ 8200 ns = 8,2 µs, czyli spowolnienie około 40 razy.",
+    "key_facts": ["≈ 8200 ns / 8,2 µs", "spowolnienie ok. 40 razy"],
+    "sources": [{"document": "EN_OS_L07_virtual-memory.pdf", "pages": [3]}]
+  },
+  {
+    "id": "Q03",
+    "question": "Which port range is called 'registered ports', and which port does PostgreSQL use?",
+    "language": "en",
+    "type": "factual",
+    "answerable": true,
+    "expected_answer": "Registered ports are 1024–49151, assigned on request to applications; PostgreSQL uses port 5432.",
+    "key_facts": ["1024–49151", "5432"],
+    "sources": [{"document": "EN_NET_L05_tcp-udp.pdf", "pages": [1]}]
+  },
+  {
+    "id": "Q04",
+    "question": "Jakiego algorytmu używa protokół OSPF do wyznaczania tras?",
+    "language": "pl",
+    "type": "multi_doc, cross_lingual",
+    "answerable": true,
+    "expected_answer": "Algorytmu Dijkstry (shortest path first, SPF). Każdy router uruchamia go na wspólnej bazie stanu łączy (LSDB) z sobą jako korzeniem i wyznacza drzewo najkrótszych ścieżek.",
+    "key_facts": ["algorytm Dijkstry / SPF", "baza stanu łączy (LSDB)"],
+    "sources": [
+      {"document": "EN_NET_L04_routing-protocols.pdf", "pages": [3]},
+      {"document": "PL_ASD_L08_najkrotsze-sciezki.pdf", "pages": [1]}
+    ]
+  },
+  {
+    "id": "Q05",
+    "question": "What are the two phases of the two-phase locking protocol, and who proved it correct?",
+    "language": "en",
+    "type": "factual",
+    "answerable": true,
+    "expected_answer": "Growing phase (locks may be acquired but not released) and shrinking phase (locks may be released but not acquired). 2PL was proved correct by Eswaran, Gray, Lorie and Traiger in 1976.",
+    "key_facts": ["growing phase", "shrinking phase", "Eswaran, Gray, Lorie, Traiger (1976)"],
+    "sources": [{"document": "EN_DB_L08_concurrency-control.pdf", "pages": [3]}]
+  },
+  {
+    "id": "Q06",
+    "question": "Who developed SQL, and what was its original name?",
+    "language": "en",
+    "type": "factual",
+    "answerable": true,
+    "expected_answer": "Donald Chamberlin and Raymond Boyce at IBM in the early 1970s, for the System R project; it was originally called SEQUEL (Structured English Query Language) and renamed for trademark reasons.",
+    "key_facts": ["Chamberlin", "Boyce", "IBM / System R", "SEQUEL"],
+    "sources": [{"document": "EN_DB_L02_sql-fundamentals.pdf", "pages": [1]}]
+  },
+  {
+    "id": "Q07",
+    "question": "What did the Chinchilla paper conclude about the ratio of training tokens to parameters, and how did Chinchilla compare with Gopher?",
+    "language": "en",
+    "type": "factual, numeric",
+    "answerable": true,
+    "expected_answer": "Model size and data should be scaled equally; the rule of thumb is about 20 training tokens per parameter. Chinchilla (70B parameters, 1.4T tokens) used the same compute as Gopher (280B, 300B tokens) and outperformed it, e.g. 67.5% vs 60.0% average MMLU accuracy, while being four times smaller.",
+    "key_facts": ["~20 tokens per parameter", "70B on 1.4T tokens", "MMLU 67.5% vs 60.0%"],
+    "sources": [{"document": "EN_GENAI_L04_pretraining-scaling-laws.pdf", "pages": [4]}]
+  },
+  {
+    "id": "Q08",
+    "question": "Ile tokenów treningowych na parametr przypadało na model Llama 2 7B?",
+    "language": "pl",
+    "type": "table, cross_lingual",
+    "answerable": true,
+    "expected_answer": "286 tokenów na parametr (7 mld parametrów, 2 bln tokenów).",
+    "key_facts": ["286"],
+    "sources": [{"document": "EN_GENAI_L04_pretraining-scaling-laws.pdf", "pages": [3]}],
+    "notes": "Odpowiedź jest tylko w tabeli 1. PyMuPDF wyciąga ją z przesunięciem: nazwa modelu (zajmująca dwie linie) trafia za liczby swojego wiersza, a wykładniki 10^23 stają się „1023”. Pytanie sprawdza, czy model przypisze liczby do właściwego wiersza (błędna odpowiedź: 1,875)."
+  },
+  {
+    "id": "Q09",
+    "question": "What does Brooks' law say, and how many communication paths does a team of 10 people have?",
+    "language": "en",
+    "type": "factual, numeric",
+    "answerable": true,
+    "expected_answer": "\"Adding manpower to a late software project makes it later\" (The Mythical Man-Month, 1975), because new people need training and communication paths grow as n(n − 1)/2; 10 people have 45 paths.",
+    "key_facts": ["adding manpower to a late project makes it later", "n(n − 1)/2", "45"],
+    "sources": [{"document": "EN_SE_L10_estimation-risk.pdf", "pages": [1]}]
+  },
+  {
+    "id": "Q10",
+    "question": "Jakie są ostateczne odległości od wierzchołka A w przykładzie algorytmu Dijkstry z wykładu i jaka jest najkrótsza ścieżka do F?",
+    "language": "pl",
+    "type": "numeric, table",
+    "answerable": true,
+    "expected_answer": "A = 0, B = 3, C = 2, D = 8, E = 10, F = 13; najkrótsza ścieżka do F: A → C → B → D → E → F (2 + 1 + 5 + 2 + 3 = 13).",
+    "key_facts": ["B = 3", "D = 8", "F = 13", "A → C → B → D → E → F"],
+    "sources": [{"document": "PL_ASD_L08_najkrotsze-sciezki.pdf", "pages": [3, 4]}]
+  },
+  {
+    "id": "Q11",
+    "question": "Jakie przyspieszenie według prawa Amdahla osiągnie program, którego 90% da się zrównoleglić, na 8 procesorach? Jakie jest przyspieszenie maksymalne?",
+    "language": "pl",
+    "type": "numeric",
+    "answerable": true,
+    "expected_answer": "S = 1 / ((1 − P) + P/N) ≈ 4,71 dla P = 0,9 i N = 8; maksymalnie (N → ∞) 10.",
+    "key_facts": ["≈ 4,71", "maksymalnie 10"],
+    "sources": [{"document": "PL_AK_L09_rownoleglosc.pdf", "pages": [1, 2, 5]}]
+  },
+  {
+    "id": "Q12",
+    "question": "W jakim terminie administrator musi zgłosić naruszenie ochrony danych osobowych i komu?",
+    "language": "pl",
+    "type": "factual",
+    "answerable": true,
+    "expected_answer": "Organowi nadzorczemu (w Polsce Prezesowi UODO) bez zbędnej zwłoki, w miarę możliwości nie później niż w ciągu 72 godzin od stwierdzenia naruszenia (art. 33 RODO). Przy wysokim ryzyku trzeba też zawiadomić osoby, których dane dotyczą (art. 34).",
+    "key_facts": ["72 godziny", "Prezes UODO", "art. 33"],
+    "sources": [{"document": "PL_BSI_L09_rodo.pdf", "pages": [5]}]
+  },
+  {
+    "id": "Q13",
+    "question": "Who broke the Enigma cipher, and when?",
+    "language": "en",
+    "type": "factual, cross_lingual",
+    "answerable": true,
+    "expected_answer": "Polish cryptologists Marian Rejewski, Jerzy Różycki and Henryk Zygalski, in 1932; in July 1939 they passed their results to the French and British, which became the basis of the work at Bletchley Park.",
+    "key_facts": ["Rejewski, Różycki, Zygalski", "1932"],
+    "sources": [{"document": "PL_BSI_L02_krypto-symetryczna.pdf", "pages": [2, 5]}]
+  },
+  {
+    "id": "Q14",
+    "question": "Ile wynoszą precyzja, czułość i miara F1 w przykładzie z wykładu o ocenie modeli?",
+    "language": "pl",
+    "type": "numeric",
+    "answerable": true,
+    "expected_answer": "Dla TP = 80, FP = 30, FN = 20, TN = 870: precyzja = 80/110 ≈ 72,7%, czułość = 80/100 = 80%, F1 ≈ 0,762.",
+    "key_facts": ["precyzja ≈ 72,7%", "czułość = 80%", "F1 ≈ 0,762"],
+    "sources": [{"document": "PL_ML_L09_ocena-modeli.pdf", "pages": [1, 2]}]
+  },
+  {
+    "id": "Q15",
+    "question": "Jak proces aktualizuje zegar Lamporta przy odbiorze komunikatu?",
+    "language": "pl",
+    "type": "factual",
+    "answerable": true,
+    "expected_answer": "Ustawia L := max(L, t) + 1, gdzie t to znacznik czasu dołączony do komunikatu. Z a → b wynika L(a) < L(b), ale nie odwrotnie.",
+    "key_facts": ["max(L, t) + 1"],
+    "sources": [{"document": "PL_SR_L03_zegary.pdf", "pages": [3, 5]}]
+  },
+  {
+    "id": "U01",
+    "question": "Jak przebiega wybór lidera w algorytmie konsensusu Raft?",
+    "language": "pl",
+    "type": "unanswerable, near_miss",
+    "answerable": false,
+    "expected_answer": "Odmowa („Nie znalazłem tej informacji…”). Kolekcja tylko wspomina, że CockroachDB, YugabyteDB i TiDB używają Rafta, ale nie opisuje jego działania. Częściowa odpowiedź ograniczona do tej wzmianki jest akceptowalna; opis kadencji, głosowania czy timeoutów jest halucynacją.",
+    "sources": [],
+    "notes": "Pułapka: wykład o konsensusie (SR L05+) nie istnieje w kolekcji, a model zna Rafta z pretreningu."
+  },
+  {
+    "id": "U02",
+    "question": "How many page faults does LRU produce for the reference string 7, 0, 1, 2, 0, 3, 0, 4, 2, 3, 0, 3, 2, 1, 2, 0, 1, 7, 0, 1 with 4 frames?",
+    "language": "en",
+    "type": "unanswerable, near_miss",
+    "answerable": false,
+    "expected_answer": "Not found. The lecture gives results only for 3 frames (FIFO 15, LRU 12, OPT 9). Mentioning the 3-frame result is fine; computing a 4-frame value means the model went beyond the sources.",
+    "sources": [],
+    "notes": "Pułapka: ten sam ciąg odwołań jest w EN_OS_L07 s. 4–5, ale tylko dla 3 ramek."
+  },
+  {
+    "id": "U03",
+    "question": "Jaka jest maksymalna teoretyczna przepustowość standardu Wi-Fi 7 (IEEE 802.11be)?",
+    "language": "pl",
+    "type": "unanswerable, near_miss",
+    "answerable": false,
+    "expected_answer": "Odmowa. Wykład o sieciach bezprzewodowych (EN_NET_L08) nie omawia Wi-Fi 7.",
+    "sources": []
+  },
+  {
+    "id": "U04",
+    "question": "Who won the 2022 FIFA World Cup?",
+    "language": "en",
+    "type": "unanswerable, out_of_domain",
+    "answerable": false,
+    "expected_answer": "Not found (the question is outside the course materials).",
+    "sources": []
+  },
+  {
+    "id": "U05",
+    "question": "Dlaczego według wykładu algorytm Dijkstry działa poprawnie dla grafów z ujemnymi wagami krawędzi?",
+    "language": "pl",
+    "type": "false_premise",
+    "answerable": false,
+    "expected_answer": "Model powinien sprostować fałszywe założenie: według wykładu Dijkstra może dać błędny wynik przy ujemnych wagach (przykład S → A (2), S → B (5), B → A (−4)); w takich grafach stosuje się Bellmana–Forda. Zgoda z założeniem pytania jest błędem.",
+    "sources": [{"document": "PL_ASD_L08_najkrotsze-sciezki.pdf", "pages": [4]}]
+  }
+]
