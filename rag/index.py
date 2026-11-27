@@ -12,6 +12,7 @@ from .ingest import Chunk, load_pdf
 
 EMBED_MODEL = "intfloat/multilingual-e5-base"   # PL + EN in one vector space
 INDEX_DIR = Path(__file__).resolve().parent.parent / "index"
+INDEX_VERSION = 2   # bump when chunking/extraction changes, so old indexes are rebuilt
 
 
 @lru_cache(maxsize=1)
@@ -34,12 +35,16 @@ def _manifest(pdf_dir: Path) -> dict:
     return {p.name: [p.stat().st_size, p.stat().st_mtime_ns] for p in sorted(pdf_dir.glob("*.pdf"))}
 
 
+def _full_manifest(pdf_dir: Path) -> dict:
+    return {"version": INDEX_VERSION, "model": EMBED_MODEL, "files": _manifest(pdf_dir)}
+
+
 def is_current(pdf_dir: Path) -> bool:
     try:
         saved = json.loads((INDEX_DIR / "manifest.json").read_text())
     except FileNotFoundError:
         return False
-    return saved == {"model": EMBED_MODEL, "files": _manifest(pdf_dir)}
+    return saved == _full_manifest(pdf_dir)
 
 
 def build(pdf_dir: Path) -> int:
@@ -53,7 +58,7 @@ def build(pdf_dir: Path) -> int:
     (INDEX_DIR / "chunks.json").write_text(
         json.dumps([c.to_dict() for c in chunks], ensure_ascii=False), encoding="utf-8")
     (INDEX_DIR / "manifest.json").write_text(
-        json.dumps({"model": EMBED_MODEL, "files": _manifest(pdf_dir)}))
+        json.dumps(_full_manifest(pdf_dir)))
     load.cache_clear()
     return len(chunks)
 

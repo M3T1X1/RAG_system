@@ -62,13 +62,14 @@ def answer(question: str, top_k: int = TOP_K) -> Answer:
     if not index_is_current():
         build_index()
 
+    refusal = generate.not_found(generate.detect_language(question))
     hits = retrieve.retrieve(question, top_k)
     if not hits:                                   # nothing relevant: refuse without calling the LLM
-        return Answer(generate.NOT_FOUND, found=False)
+        return Answer(refusal, found=False)
 
     text = generate.generate(question, hits)
-    if generate.NOT_FOUND.rstrip(".") in text:
-        return Answer(generate.NOT_FOUND, found=False)
+    if generate.is_not_found(text):
+        return Answer(refusal, found=False)
 
     valid, invalid = generate.cited_numbers(text, len(hits))
     warnings = []
@@ -76,7 +77,7 @@ def answer(question: str, top_k: int = TOP_K) -> Answer:
         warnings.append(f"Odpowiedź powołuje się na nieistniejące źródła: {invalid}.")
     if not valid:
         warnings.append("Odpowiedź nie zawiera cytatów — traktuj ją ostrożnie.")
-    unsupported = generate.verify(text, hits)
+    unsupported = generate.verify(question, text, hits)
     if unsupported:
         warnings.append("Weryfikacja wykazała twierdzenia bez pokrycia w źródłach: "
                         + "; ".join(unsupported))
