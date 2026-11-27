@@ -77,7 +77,7 @@ def answer(question: str, top_k: int = TOP_K) -> Answer:
         warnings.append(f"Odpowiedź powołuje się na nieistniejące źródła: {invalid}.")
     if not valid:
         warnings.append("Odpowiedź nie zawiera cytatów — traktuj ją ostrożnie.")
-    unsupported = generate.verify(text, hits)
+    unsupported = generate.verify(question, text, hits)
     if unsupported:
         warnings.append("Weryfikacja wykazała twierdzenia bez pokrycia w źródłach: "
                         + "; ".join(unsupported))
